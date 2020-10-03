@@ -31,19 +31,29 @@ var connectToDb = function(req,res,next){
 }
 
 var verifyToken = function(req,res,next){
-    token = req.header("_xToken");
-    if(!token){
-        return res.status(400).json({"error":"_xToken needs to be provided for using API"})
+    var headerValue = req.header("Authorization");
+    if(!headerValue){
+        return res.status(400).json({"error":"Authorization header needs to be provided for using API"});
     }
-    if(myCache.has(token)){
-        return res.status(400).json({"error":"Cannot proceed. User is logged out"})
+
+    var authData = headerValue.split(' ');
+
+    if(authData && authData.length==2 && authData[0]==='Bearer'){
+        token = authData[1];
+        if(myCache.has(token)){
+            return res.status(400).json({"error":"Cannot proceed. User is logged out"})
+        }
+        try {
+            decoded = jwt.verify(token, tokenSecret);
+            next();
+          } catch(err) {
+            return res.status(400).json({"error":err});
+          }
     }
-    try {
-        decoded = jwt.verify(token, tokenSecret);
-        next();
-      } catch(err) {
-        return res.status(400).json({"error":err});
-      }
+    else {
+        return res.status(400).json({"error":"Appropriate authentication information needs to be provided"})
+    }
+
 }
 
 
@@ -104,7 +114,7 @@ route.post("/signup",[
 }); 
 
 route.get("/login",[
-    header("_xData","_xData header required to login").notEmpty().trim()
+    header("Authorization","Authorization header required to login").notEmpty().trim()
 ],(request,response)=>{
 
     const err = validationResult(request);
@@ -113,44 +123,53 @@ route.get("/login",[
     }
     
     try{
-        var data = request.header('_xData');
-    let buff = new Buffer(data, 'base64');
-    let loginInfo = JSON.parse(buff.toString('ascii'));
-    var result ={};
+        var data = request.header('Authorization');
+        //console.log(data);
+        var authData = data.split(' ');
 
-    if(loginInfo!=undefined && loginInfo!=null && loginInfo.email!=undefined && loginInfo.email!=null && loginInfo.password!=undefined && loginInfo.password!=null){
-        var query = {"email":loginInfo.email};
-        collection.find(query).toArray((err,res)=>{
-            var responseCode = 400;
-            if(err){
-                result = {"error":err};
-            }
-            else if(res.length<=0){
-                result={"error":"no such user present"};
+        if(authData && authData.length==2 && authData[0]==='Basic'){
+            let buff = new Buffer(authData[1], 'base64');
+            let loginInfo = buff.toString('ascii').split(":");
+            //console.log(loginInfo);
+            var result ={};
+
+            if(loginInfo!=undefined && loginInfo!=null && loginInfo.length==2){
+                var query = {"email":loginInfo[0]};
+                collection.find(query).toArray((err,res)=>{
+                    var responseCode = 400;
+                    if(err){
+                        result = {"error":err};
+                    }
+                    else if(res.length<=0){
+                        result={"error":"no such user present"};
+                    }
+                    else{
+                        var user = new User(res[0]);
+                        var hash = crypto.createHash('md5').update(loginInfo[1]).digest('hex');
+                        if(user.password===hash){
+                            result=user.getUser();
+                            user=user.getUser();
+                            user.exp = Math.floor(Date.now() / 1000) + (60 * 60);
+                            var token = jwt.sign(user, tokenSecret);
+                            result.token=token;
+                            responseCode=200;
+                        }
+                        else{
+                            result={"error":"Username or password is incorrect"};
+                        }
+                    }
+
+                    return response.status(responseCode).json(result);
+
+                });
             }
             else{
-                var user = new User(res[0]);
-                var hash = crypto.createHash('md5').update(loginInfo.password).digest('hex');
-                if(user.password===hash){
-                    result=user.getUser();
-                    user=user.getUser();
-                    user.exp = Math.floor(Date.now() / 1000) + (60 * 60);
-                    var token = jwt.sign(user, tokenSecret);
-                    result.token=token;
-                    responseCode=200;
-                }
-                else{
-                    result={"error":"Username or password is incorrect"};
-                }
+                return response.status(400).json({"error":"credentials not provided for login"});
             }
-
-            return response.status(responseCode).json(result);
-
-        });
-    }
-    else{
-        return response.status(400).json({"error":"credentials not provided for login"});
-    }
+        }
+        else{
+            return response.status(400).json({"error":"Desired authentication type and value required for login"})
+        }
     }
     catch(error){
         return response.status(400).json({"error":error.toString()});
