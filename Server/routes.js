@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const { requestBody, validationResult, body, header, param, query } = require('express-validator');
 const user = require("./User");
 const User = require("./User");
+const NodeCache = require('node-cache');
+const crypto = require('crypto')
 
 const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://rojatkaraditi:AprApr_2606@test.z8ya6.mongodb.net/project4DB?retryWrites=true&w=majority";
@@ -13,6 +15,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 var collection;
 const tokenSecret = "wFq9+ssDbT#e2H9^";
 var decoded={};
+var token;
+const myCache = new NodeCache( { stdTTL: 3600, checkperiod: 60 } );
 
 
 var connectToDb = function(req,res,next){
@@ -27,9 +31,12 @@ var connectToDb = function(req,res,next){
 }
 
 var verifyToken = function(req,res,next){
-    var token = req.header("_xToken");
+    token = req.header("_xToken");
     if(!token){
         return res.status(400).json({"error":"_xToken needs to be provided for using API"})
+    }
+    if(myCache.has(token)){
+        return res.status(400).json({"error":"Cannot proceed. User is logged out"})
     }
     try {
         decoded = jwt.verify(token, tokenSecret);
@@ -66,8 +73,9 @@ route.post("/signup",[
         let data = request.body.password;
     let buff = new Buffer(data, 'base64');
     let pwd = buff.toString('ascii');
+    var hash = crypto.createHash('md5').update(pwd).digest('hex');
     var newUser = new User(request.body);
-    newUser.password=pwd;
+    newUser.password=hash;
     collection.insertOne(newUser,(err,res)=>{
         var result={};
         var responseCode = 200;
@@ -122,7 +130,8 @@ route.get("/login",[
             }
             else{
                 var user = new User(res[0]);
-                if(user.password===loginInfo.password){
+                var hash = crypto.createHash('md5').update(loginInfo.password).digest('hex');
+                if(user.password===hash){
                     result=user.getUser();
                     user=user.getUser();
                     user.exp = Math.floor(Date.now() / 1000) + (60 * 60);
@@ -150,7 +159,18 @@ route.get("/login",[
 });
 
 route.get("/users/logout",(request,response)=>{
-    //decide strategy for logout
+    const expiryTime = ((decoded.exp*1000)-Date.now())/1000;
+    
+    if(expiryTime>0){
+         var result = myCache.set(token,decoded.exp,expiryTime);
+         if(!result){
+             return response.status(400).json({"error":"could not logout user"});
+         }
+         return response.status(200).json({"result":"user logged out"});
+    }
+    else{
+        return response.status(400).json({"error":"token expired"});
+    }
 });
 
 
