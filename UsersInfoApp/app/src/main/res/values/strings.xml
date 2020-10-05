@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">UsersInfo</string>
+
+    <string name="signup">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="firstname">First Name</string>
+    <string name="lastname">Last Name</string>
+    <string name="choose_password">Choose Password</string>
+    <string name="repeat">Repeat Password</string>
+    <string name="sigup">Sign Up</string>
+    <string name="cancel">Cancel</string>
+    <string name="AutoFillHint" />
+    <string name="gender">Gender</string>
+    <string name="age">Age</string>
+    <string name="search_users">Search Users</string>
+</resources>
