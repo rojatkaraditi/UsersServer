@@ -15,4 +15,11 @@
     <string name="gender">Gender</string>
     <string name="age">Age</string>
     <string name="search_users">Search Users</string>
+    <string name="Search">Search By:</string>
+    <string name="firstnameRadio">First Name</string>
+    <string name="lastnameRadio">Last Name</string>
+    <string name="emailRadio">Email</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="reset">Reset</string>
 </resources>
