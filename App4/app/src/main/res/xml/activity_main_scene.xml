@@ -8,8 +8,6 @@
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
         motion:duration="1000">
-        <OnClick motion:targetId="@id/sigin_button"
-            motion:clickAction="transitionToEnd"></OnClick>
        <KeyFrameSet>
        </KeyFrameSet>
     </Transition>
@@ -63,6 +61,15 @@
             android:layout_marginTop="220dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/siging_in_tv"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            motion:layout_constraintTop_toBottomOf="@+id/signup_button"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp" />
     </ConstraintSet>
 
 </MotionScene>

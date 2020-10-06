@@ -15,4 +15,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sign_in_as">Sign-in as</string>
+    <string name="Signing_in">Signing_in...</string>
+    <string name="Signing_up">Siging Up...</string>
+    <string name="reset">Reset</string>
 </resources>
