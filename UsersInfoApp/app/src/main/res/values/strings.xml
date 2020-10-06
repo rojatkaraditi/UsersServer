@@ -22,4 +22,9 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="reset">Reset</string>
+    <string name="EditProfile">Edit Profile</string>
+    <string name="profile">Profile</string>
+    <string name="Logout">Logout</string>
+    <string name="close">Close</string>
+    <string name="save">Save</string>
 </resources>

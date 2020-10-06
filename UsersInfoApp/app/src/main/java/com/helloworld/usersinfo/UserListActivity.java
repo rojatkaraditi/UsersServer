@@ -1,13 +1,18 @@
 package com.helloworld.usersinfo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,8 +42,39 @@ public class UserListActivity extends AppCompatActivity {
     private String searchString = "";
     private CheckBox checkBoxMale;
     private CheckBox checkBoxFemale;
+    private SharedPreferences preferences;
+    private User user;
 
     ArrayList<User> userArrayList = new ArrayList<>();
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_item_list, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.editProfile:
+                Intent intent = new Intent(UserListActivity.this, EditProfileActivity.class);
+                intent.putExtra("UserObject",user);
+                startActivity(intent);
+                return true;
+
+            case R.id.logout:
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.commit();
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +83,9 @@ public class UserListActivity extends AppCompatActivity {
         searchTextFilter = findViewById(R.id.searchTextFilter);
         checkBoxMale = findViewById(R.id.checkBoxMale);
         checkBoxFemale = findViewById(R.id.checkBoxFemale);
+        preferences = getApplicationContext().getSharedPreferences("TokeyKey", 0);
+
+        user = (User) getIntent().getExtras().getSerializable("UserObject");
 
         final ArrayList<String> dropDownList = new ArrayList<>();
         dropDownList.add("All Users");
@@ -161,7 +200,7 @@ public class UserListActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             userArrayList.clear();
-            SharedPreferences preferences = getApplicationContext().getSharedPreferences("TokeyKey", 0);
+
             final OkHttpClient client = new OkHttpClient();
             String listofUsers = null;
             if(!searchString.equals("")){

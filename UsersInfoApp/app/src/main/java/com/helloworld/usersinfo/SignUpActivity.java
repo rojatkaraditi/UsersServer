@@ -182,6 +182,7 @@ public class SignUpActivity extends AppCompatActivity {
                         SharedPreferences preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString("TOKEN_KEY",root.getString("token"));
+                        editor.putString("ID",user.id);
                         editor.commit();
                         Toast.makeText(SignUpActivity.this, "User Successfully created", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(SignUpActivity.this, UserListActivity.class);

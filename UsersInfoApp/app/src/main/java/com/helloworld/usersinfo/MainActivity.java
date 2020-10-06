@@ -37,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.login);
         password = findViewById(R.id.password);
 
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("TokeyKey", 0);
+        String pastTokenKey = preferences.getString("TOKEN_KEY", null);
+//        String userId = preferences.getString("ID", null);
+        if(pastTokenKey!=null && !pastTokenKey.equals("")){
+            new getUser().execute();
+        }
+
         findViewById(R.id.buttonLogin).setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -140,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("TOKEN_KEY",root.getString("token"));
+                    editor.putString("ID",user.id);
                     editor.commit();
                     Intent intent = new Intent(MainActivity.this, UserListActivity.class);
                     intent.putExtra("UserObject", user);
@@ -147,6 +155,63 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     //It means that they are some error while signing up.
                     Toast.makeText(MainActivity.this, root.getString("error"), Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class getUser extends AsyncTask<String, Void, String> {
+        boolean isStatus = true;
+        @Override
+        protected String doInBackground(String... strings) {
+            final OkHttpClient client = new OkHttpClient();
+            SharedPreferences preferences = getApplicationContext().getSharedPreferences("TokeyKey", 0);
+
+            try {
+                Request request = new Request.Builder()
+                        .url("http://167.99.228.2:3000/api/v1/users/"+preferences.getString("ID", null))
+                        .header("Authorization", "Bearer "+ preferences.getString("TOKEN_KEY", null))
+                        .build();
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()){
+                        isStatus = true;
+                    }else{
+                        isStatus = false;
+                    }
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }catch (Exception e){
+
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            JSONObject root = null;
+            Log.d("demo",result);
+            try {
+                root = new JSONObject(result);
+                if(isStatus){
+                    Log.d("demo",root.toString());
+                    User user = new User();
+                    user.id = root.getString("_id");
+                    user.fname = root.getString("firstName");
+                    user.lname = root.getString("lastName");
+                    user.gender = root.getString("gender");
+                    user.email = root.getString("email");
+                    user.age = root.getString("age");
+                    Intent intent = new Intent(MainActivity.this, UserListActivity.class);
+                    intent.putExtra("UserObject", user);
+                    startActivity(intent);
+                }else{
+                    //It means that they are some error while signing up.
+                    Toast.makeText(MainActivity.this, root.getString("Session has expired. Please login again!"), Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
