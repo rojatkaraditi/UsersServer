@@ -196,7 +196,7 @@ public class SignUpActivity extends AppCompatActivity {
                             //It means duplicate email issue
                             JSONObject keyValue = error.getJSONObject("keyValue");
                             if(keyValue.getString("email") != null){
-                                Toast.makeText(SignUpActivity.this, "Email already exist. Please login again!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUpActivity.this, "Email already exist. Please use another email!", Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(SignUpActivity.this, "Some error occured. Please try again!", Toast.LENGTH_SHORT).show();
                             }
