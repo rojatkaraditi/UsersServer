@@ -26,7 +26,7 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_host"
-        style="@style/nav_menu_text"
+        style="@style/textSize_18"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"

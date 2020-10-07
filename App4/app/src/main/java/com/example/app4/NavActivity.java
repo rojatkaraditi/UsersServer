@@ -1,6 +1,6 @@
 package com.example.app4;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -12,10 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,27 +39,31 @@ public class NavActivity extends AppCompatActivity {
         t.setNavigationIcon(R.drawable.menu_icon);
         setSupportActionBar(t);
 
-        preferences =  getApplicationContext().getSharedPreferences("TokeyKey",0);
-        String temp = preferences.getString("USER", null);
-        u = gson.fromJson(temp,User.class);
 
         //setting up the drawers
         DrawerLayout drawerLayout = findViewById(R.id.drawer_for_nav);
         navigationView = findViewById(R.id.nav_host);
         configuration = new AppBarConfiguration.Builder(
-                R.id.nav_users,R.id.nav_my_profile)
+                R.id.nav_users,R.id.nav_my_profile,R.id.nav_logout)
                 .setDrawerLayout(drawerLayout)
                 .build();
         navController = Navigation.findNavController(this,R.id.frag_container);
         NavigationUI.setupActionBarWithNavController(this,navController,configuration);
         NavigationUI.setupWithNavController(navigationView,navController);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         // setting user info in sidebar
         SettingInfoInHeaderInSidebar();
-
     }
 
     private void SettingInfoInHeaderInSidebar() {
+        preferences =  getApplicationContext().getSharedPreferences("TokeyKey",0);
+        String temp = preferences.getString("USER", null);
+        u = gson.fromJson(temp,User.class);
         ImageView iv = navigationView.getHeaderView(0).findViewById(R.id.user_image_inNavHeader);
         TextView tv = navigationView.getHeaderView(0).findViewById(R.id.user_name_inNavHeader);
         Log.d(TAG, "SettingInfoInHeaderInSidebar: iv name="+iv.toString());

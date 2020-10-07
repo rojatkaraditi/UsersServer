@@ -102,9 +102,11 @@ public class MainActivity extends AppCompatActivity {
     private void checkIfUserIsLogedIN() {
         preferences = getApplicationContext().getSharedPreferences("TokeyKey",0);
         String pastTokenKey = preferences.getString("TOKEN_KEY", null);
-        //starting animation and async to check user
-        motionLayout.transitionToEnd();
-        new getUser().execute();
+        if(pastTokenKey!=null && !pastTokenKey.equals("")){
+            //starting animation and async to check user
+            motionLayout.transitionToEnd();
+            new getUser().execute();
+        }
     }
 
     private void MotionListner() {
@@ -256,6 +258,8 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     //It means that they are some error while signing up.
                     Toast.makeText(MainActivity.this, root.getString("error"), Toast.LENGTH_SHORT).show();
+                    //calling transion in middle
+                    motionLayout.transitionToStart();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

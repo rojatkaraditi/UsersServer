@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "d8531b35-89d3-4f28-bb22-c0a05abf815d",
+		"name": "UsersServer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\":\"james\",\n    \"lastName\":\"smith\",\n    \"age\":35,\n    \"gender\":\"male\",\n    \"email\":\"james@gmail.com\",\n    \"password\":\"YWRpdGlyb2phdGthcg==\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "167.99.228.2:3000/api/v1/signup",
+					"host": [
+						"167",
+						"99",
+						"228",
+						"2"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "aditirojatkar",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "aditi@gmail.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "167.99.228.2:3000/api/v1/login",
+					"host": [
+						"167",
+						"99",
+						"228",
+						"2"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjc5MGYzODNiZjYxNzEwMmVjYWJkYTkiLCJmaXJzdE5hbWUiOiJBZGl0aSIsImxhc3ROYW1lIjoiRG9lIiwiZ2VuZGVyIjoiZmVtYWxlIiwiYWdlIjozMCwiZW1haWwiOiJhZGl0aUBnbWFpbC5jb20iLCJleHAiOjE2MDE3NzM1MTYsImlhdCI6MTYwMTc2OTkxNn0.PbRThf0N0wRdyGIPrrqydA2LUQi8cNHWrrNqvHGbSqA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_id\":\"5f790f383bf617102ecabda9\",\n    \"firstName\":\"Aditi\",\n    \"lastName\":\"Doe\",\n    \"gender\":\"female\",\n    \"age\":26\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "167.99.228.2:3000/api/v1/users",
+					"host": [
+						"167",
+						"99",
+						"228",
+						"2"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjc5MGYzODNiZjYxNzEwMmVjYWJkYTkiLCJmaXJzdE5hbWUiOiJBZGl0aSIsImxhc3ROYW1lIjoiRG9lIiwiZ2VuZGVyIjoiZmVtYWxlIiwiYWdlIjozMCwiZW1haWwiOiJhZGl0aUBnbWFpbC5jb20iLCJleHAiOjE2MDE3NzM1MTYsImlhdCI6MTYwMTc2OTkxNn0.PbRThf0N0wRdyGIPrrqydA2LUQi8cNHWrrNqvHGbSqA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "167.99.228.2:3000/api/v1/users/5f790f383bf617102ecabda9",
+					"host": [
+						"167",
+						"99",
+						"228",
+						"2"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"5f790f383bf617102ecabda9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users with search criteria",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjc5MGYzODNiZjYxNzEwMmVjYWJkYTkiLCJmaXJzdE5hbWUiOiJBZGl0aSIsImxhc3ROYW1lIjoiRG9lIiwiZ2VuZGVyIjoiZmVtYWxlIiwiYWdlIjozMCwiZW1haWwiOiJhZGl0aUBnbWFpbC5jb20iLCJleHAiOjE2MDE3NzM1MTYsImlhdCI6MTYwMTc2OTkxNn0.PbRThf0N0wRdyGIPrrqydA2LUQi8cNHWrrNqvHGbSqA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "167.99.228.2:3000/api/v1/users?firstName=adi&lastName=do&gender=female&email=aditi@gmail.com",
+					"host": [
+						"167",
+						"99",
+						"228",
+						"2"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "firstName",
+							"value": "adi"
+						},
+						{
+							"key": "lastName",
+							"value": "do"
+						},
+						{
+							"key": "gender",
+							"value": "female"
+						},
+						{
+							"key": "email",
+							"value": "aditi@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjc5MGYzODNiZjYxNzEwMmVjYWJkYTkiLCJmaXJzdE5hbWUiOiJBZGl0aSIsImxhc3ROYW1lIjoiRG9lIiwiZ2VuZGVyIjoiZmVtYWxlIiwiYWdlIjozMCwiZW1haWwiOiJhZGl0aUBnbWFpbC5jb20iLCJleHAiOjE2MDE3NzM1MTYsImlhdCI6MTYwMTc2OTkxNn0.PbRThf0N0wRdyGIPrrqydA2LUQi8cNHWrrNqvHGbSqA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "167.99.228.2:3000/api/v1/users/logout",
+					"host": [
+						"167",
+						"99",
+						"228",
+						"2"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
