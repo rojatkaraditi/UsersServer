@@ -18,4 +18,7 @@
     <string name="Signing_in">Signing_in...</string>
     <string name="Signing_up">Siging Up...</string>
     <string name="reset">Reset</string>
+    <string name="logout">Logout</string>
+    <string name="edit">Edit</string>
+    <string name="editInfo">Edit Information</string>
 </resources>

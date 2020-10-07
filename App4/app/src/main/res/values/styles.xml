@@ -14,7 +14,7 @@
         <item name="backgroundColor">@color/BackgroundColor</item>
     </style>
 
-    <style name="nav_menu_text" parent="AppTheme">
+    <style name="textSize_18" parent="AppTheme">
         <item name="android:textSize">18sp</item>
     </style>
     

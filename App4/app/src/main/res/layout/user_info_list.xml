@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageUsersInfo"
+            android:id="@+id/userImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="3dp"

@@ -75,7 +75,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
         ConstraintLayout constraintLayout;
         public MyViewHolder(View view) {
             super(view);
-            avatarImage = view.findViewById(R.id.imageUsersInfo);
+            avatarImage = view.findViewById(R.id.userImage);
             name = view.findViewById(R.id.nameUsersInfo);
             age = view.findViewById(R.id.ageUsersInfo);
             email = view.findViewById(R.id.emailUsersInfo);

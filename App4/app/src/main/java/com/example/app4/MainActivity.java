@@ -258,6 +258,8 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     //It means that they are some error while signing up.
                     Toast.makeText(MainActivity.this, root.getString("error"), Toast.LENGTH_SHORT).show();
+                    //calling transion in middle
+                    motionLayout.transitionToStart();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
