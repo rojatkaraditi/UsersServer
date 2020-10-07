@@ -286,7 +286,7 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.d("demo",s);
+            //Log.d("demo",s);
             if(s!=null){
                 JSONObject root = null;
                 try {
