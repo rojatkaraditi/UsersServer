@@ -130,6 +130,7 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //again it will get called with the corresponding user filter
+                searchString = "";
                 if(filterType.equals("FirstName")){
                     if(checkValidations(searchTextFilter)){
 //                        firstName=test
@@ -147,14 +148,14 @@ public class UserListActivity extends AppCompatActivity {
 
                 if(!checkBoxFemale.isChecked() && !checkBoxMale.isChecked()){
                     Toast.makeText(UserListActivity.this, "Please select male and female textbox", Toast.LENGTH_SHORT).show();
-                }else if(!checkBoxFemale.isChecked() && checkBoxMale.isChecked()){
+                }else if(checkBoxFemale.isChecked() && !checkBoxMale.isChecked()){
                     if (searchString.equals("")) {
                         searchString = "gender=Female";
                     }else{
                         searchString += "&gender=Female";
                     }
                     new LoadUsersAsync().execute("");
-                }else if(checkBoxFemale.isChecked() && !checkBoxMale.isChecked()){
+                }else if(!checkBoxFemale.isChecked() && checkBoxMale.isChecked()){
                     if (searchString.equals("")) {
                         searchString = "gender=Male";
                     }else{
