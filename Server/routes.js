@@ -247,19 +247,20 @@ route.get("/users",[
     }
     try{
         var query = {};
+    console.log(request.query.firstName);
     if(request.query.firstName){
-        var rule = {"$regex": ".*"+request.query.firstName+"*.", "$options": "i"}
+        var rule = {"$regex": ".*"+request.query.firstName+".*", "$options": "i"}
         query.firstName=rule;
     }
     if(request.query.lastName){
-        var rule = {"$regex": ".*"+request.query.lastName+"*.", "$options": "i"}
+        var rule = {"$regex": ".*"+request.query.lastName+".*", "$options": "i"}
         query.lastName=rule;
     }
     if(request.query.gender){
         query.gender=request.query.gender;
     }
     if(request.query.email){
-        var rule = {"$regex": ".*"+request.query.email+"*.", "$options": "i"}
+        var rule = {"$regex": ".*"+request.query.email+".*", "$options": "i"}
         query.email=rule;
     }
 
