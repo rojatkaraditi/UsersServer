@@ -68,9 +68,9 @@ route.post("/signup",[
     body("lastName","lastName can have only alphabets").isAlpha().trim().escape(),
     body("gender","gender cannot be empty").notEmpty().trim().escape(),
     body("gender","gender can have only alphabets").isAlpha().trim().escape(),
-    body("gender","gender can only be male or female").isIn(["male","female","Male","Female"]),
+    body("gender","gender can only be Male or Female").isIn(["Male","Female"]),
     body("age","age is needed to create user").notEmpty(),
-    body("age","age has to be an integer value").isInt(),
+    body("age","please enter a valid age").isInt({gt:0}),
     body("email","email cannot be empty").notEmpty().trim().escape(),
     body("email","invalid email format").isEmail(),
     body("password","password cannot be empty").notEmpty().trim()
@@ -83,30 +83,40 @@ route.post("/signup",[
         let data = request.body.password;
     let buff = new Buffer(data, 'base64');
     let pwd = buff.toString('ascii');
-    var hash = crypto.createHash('md5').update(pwd).digest('hex');
-    var newUser = new User(request.body);
-    newUser.password=hash;
-    collection.insertOne(newUser,(err,res)=>{
-        var result={};
-        var responseCode = 200;
-        if(err){
-            result={"error":err};
-            responseCode=400;
-        }
-        else{
-            //console.log(res);
 
-            if(res.ops.length>0){
-                var usr = res.ops[0].getUser();
-                usr.exp = Math.floor(Date.now() / 1000) + (60 * 60);
-                var token = jwt.sign(usr, tokenSecret);
-                result=res.ops[0].getUser();
-                result.token=token;
+    if(pwd.length>=6 && pwd.length<=20){
+        var hash = crypto.createHash('md5').update(pwd).digest('hex');
+        var newUser = new User(request.body);
+        newUser.password=hash;
+        collection.insertOne(newUser,(err,res)=>{
+            var result={};
+            var responseCode = 200;
+            if(err){
+                result={"error":err};
+                responseCode=400;
             }
-            
-        }
-        return response.status(responseCode).json(result);
-    });
+            else{
+                //console.log(res);
+    
+                if(res.ops.length>0){
+                    var usr = res.ops[0].getUser();
+                    usr.exp = Math.floor(Date.now() / 1000) + (60 * 60);
+                    var token = jwt.sign(usr, tokenSecret);
+                    result=res.ops[0].getUser();
+                    result.token=token;
+                }
+                
+            }
+            return response.status(responseCode).json(result);
+        });
+    }
+    else{
+        var errors=[];
+        var e={"msg":"password should have atleast 6 and at max 20 characters"};
+        errors[0]=e;
+        var errArray={"errors":[e]}
+        return response.status(400).json({"error":errArray});
+    }
     }
     catch(error){
         return response.status(400).json({"error":error});
@@ -229,8 +239,7 @@ route.get("/users/:id",[
 route.get("/users",[
     query("firstName","firstName should only have alphabets").optional().isAlpha().trim().escape(),
     query("lastName","lastName should only have alphabets").optional().isAlpha().trim().escape(),
-    query("gender","gender can only be male or female").optional().isIn(["male","female","Male","Female"]),
-    query("email","invalid email format").optional().isEmail()
+    query("gender","gender can only be Male or Female").optional().isIn(["Male","Female"])
 ],(request,response)=>{
     var err =validationResult(request);
     if(!err.isEmpty()){
@@ -250,7 +259,8 @@ route.get("/users",[
         query.gender=request.query.gender;
     }
     if(request.query.email){
-        query.email=request.query.email;
+        var rule = {"$regex": ".*"+request.query.email+"*.", "$options": "i"}
+        query.email=rule;
     }
 
     var result = {};
@@ -287,9 +297,10 @@ route.put("/users",[
     body("_id","invalid id").isMongoId(),
     body("firstName","firstName can have only alphabets").optional().isAlpha().trim().escape(),
     body("lastName","lastName can have only alphabets").optional().isAlpha().trim().escape(),
-    body("gender","gender can only be male or female").optional().isIn(["male","female","Male","Female"]),
-    body("age","age has to be an integer value").optional().isInt(),
-    body("email","email cannot be updated").isEmpty()
+    body("gender","gender can only be Male or Female").optional().isIn(["Male","Female"]),
+    body("age","please enter a valid age").optional().isInt({gt:0}),
+    body("email","email cannot be updated").isEmpty(),
+    body("password","password cannot be updated").isEmpty()
 ],(request,response)=>{
     var err = validationResult(request);
     if(!err.isEmpty()){
