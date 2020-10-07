@@ -83,30 +83,40 @@ route.post("/signup",[
         let data = request.body.password;
     let buff = new Buffer(data, 'base64');
     let pwd = buff.toString('ascii');
-    var hash = crypto.createHash('md5').update(pwd).digest('hex');
-    var newUser = new User(request.body);
-    newUser.password=hash;
-    collection.insertOne(newUser,(err,res)=>{
-        var result={};
-        var responseCode = 200;
-        if(err){
-            result={"error":err};
-            responseCode=400;
-        }
-        else{
-            //console.log(res);
 
-            if(res.ops.length>0){
-                var usr = res.ops[0].getUser();
-                usr.exp = Math.floor(Date.now() / 1000) + (60 * 60);
-                var token = jwt.sign(usr, tokenSecret);
-                result=res.ops[0].getUser();
-                result.token=token;
+    if(pwd.length>=6 && pwd.length<=20){
+        var hash = crypto.createHash('md5').update(pwd).digest('hex');
+        var newUser = new User(request.body);
+        newUser.password=hash;
+        collection.insertOne(newUser,(err,res)=>{
+            var result={};
+            var responseCode = 200;
+            if(err){
+                result={"error":err};
+                responseCode=400;
             }
-            
-        }
-        return response.status(responseCode).json(result);
-    });
+            else{
+                //console.log(res);
+    
+                if(res.ops.length>0){
+                    var usr = res.ops[0].getUser();
+                    usr.exp = Math.floor(Date.now() / 1000) + (60 * 60);
+                    var token = jwt.sign(usr, tokenSecret);
+                    result=res.ops[0].getUser();
+                    result.token=token;
+                }
+                
+            }
+            return response.status(responseCode).json(result);
+        });
+    }
+    else{
+        var errors=[];
+        var e={"msg":"password should have atleast 6 and at max 20 characters"};
+        errors[0]=e;
+        var errArray={"errors":[e]}
+        return response.status(400).json({"error":errArray});
+    }
     }
     catch(error){
         return response.status(400).json({"error":error});
