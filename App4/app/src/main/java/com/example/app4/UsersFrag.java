@@ -143,6 +143,7 @@ public class UsersFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 //again it will get called with the corresponding user filter
+                searchString = "";
                 if(filterType.equals("FirstName")){
                     if(checkValidations(searchTextFilter)){
 //                        firstName=test
@@ -160,14 +161,14 @@ public class UsersFrag extends Fragment {
 
                 if(!checkBoxFemale.isChecked() && !checkBoxMale.isChecked()){
                     Toast.makeText(getActivity(), "Please select male and female textbox", Toast.LENGTH_SHORT).show();
-                }else if(!checkBoxFemale.isChecked() && checkBoxMale.isChecked()){
+                }else if(checkBoxFemale.isChecked() && !checkBoxMale.isChecked()){
                     if (searchString.equals("")) {
                         searchString = "gender=Female";
                     }else{
                         searchString += "&gender=Female";
                     }
                     new LoadUsersAsync().execute("");
-                }else if(checkBoxFemale.isChecked() && !checkBoxMale.isChecked()){
+                }else if(!checkBoxFemale.isChecked() && checkBoxMale.isChecked()){
                     if (searchString.equals("")) {
                         searchString = "gender=Male";
                     }else{
@@ -290,6 +291,8 @@ public class UsersFrag extends Fragment {
                     Log.d(TAG, "onPostExecute: calling notify datasetchanged");
                     mAdapter.notifyDataSetChanged();
                 }else{
+                    //userArrayList.clear();
+                    mAdapter.notifyDataSetChanged();
                     Toast.makeText(getContext(), "Sorry no users found!", Toast.LENGTH_SHORT).show();
                 }
             }

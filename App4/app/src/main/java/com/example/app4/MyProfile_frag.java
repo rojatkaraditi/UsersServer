@@ -83,6 +83,8 @@ public class MyProfile_frag extends Fragment {
     Gson gson =  new Gson();
     User u;
     SharedPreferences.Editor editor;
+    MyProfileInteractWithNavActivity obj1;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -152,6 +154,7 @@ public class MyProfile_frag extends Fragment {
             }
         });
 
+        obj1 = (MyProfileInteractWithNavActivity) getActivity();
         return view;
     }
 
@@ -160,11 +163,11 @@ public class MyProfile_frag extends Fragment {
         u = gson.fromJson(temp, User.class);
         //textVies
         Log.d(TAG, "SetValuesInFields: u in  my profile=>"+u);
-        age_tv.setText(u.age);
-        email_tv.setText(u.email);
-        firstName_tv.setText(u.fname);
-        lastName_tv.setText(u.lname);
-        gender_tv.setText(u.gender);
+        age_tv.setText("Age: "+u.age);
+        email_tv.setText("Email: "+u.email);
+        firstName_tv.setText("FirstName: "+u.fname);
+        lastName_tv.setText("LastName: "+u.lname);
+        gender_tv.setText("Gender: "+u.gender);
         //textlayoutedittext
         age_TIET.setText(u.age);
         firstName_TIET.setText(u.fname);
@@ -330,6 +333,7 @@ public class MyProfile_frag extends Fragment {
                     editor.putString("USER",gson.toJson(user));
                     editor.commit();
                     //closing my profile
+                    obj1.updateSideBar();
                     getActivity().onBackPressed();
                     Log.d(TAG, "onPostExecute: user token exists");
                     //result = "okay";
@@ -344,5 +348,8 @@ public class MyProfile_frag extends Fragment {
         }
     }
 
+    interface MyProfileInteractWithNavActivity{
+        void updateSideBar();
+    }
 
 }

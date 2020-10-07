@@ -222,10 +222,16 @@ public class SignUpActivity extends AppCompatActivity {
         }else{
             email_TIL.setError("");
         }
-        if(password_TIET.getText().toString().equals("")){
+        String x = password_TIET.getText().toString();
+        if(x.equals("")){
             password_TIL.setError("Cannot be empty");
             return false;
-        }else{
+        }
+//        }else if(x.length()<6 || x.length()>20){
+//            password_TIL.setError("should be of length more than 6 and less than 20");
+//            return false;
+//        }
+        else{
             password_TIL.setError("");
         }
         return true;

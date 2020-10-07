@@ -39,7 +39,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         User user = mDataset.get(position);
 
-        //holder.age.setText("("+user.age+")");
+        holder.age.setText("("+user.age+")");
         holder.email.setText(user.email);
         holder.name.setText(user.fname+" "+user.lname);
 

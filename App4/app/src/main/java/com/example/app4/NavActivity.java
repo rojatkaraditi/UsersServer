@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
-public class NavActivity extends AppCompatActivity {
+public class NavActivity extends AppCompatActivity implements MyProfile_frag.MyProfileInteractWithNavActivity {
 
     private static final String TAG = "okay";
     private AppBarConfiguration configuration;
@@ -50,15 +50,10 @@ public class NavActivity extends AppCompatActivity {
         navController = Navigation.findNavController(this,R.id.frag_container);
         NavigationUI.setupActionBarWithNavController(this,navController,configuration);
         NavigationUI.setupWithNavController(navigationView,navController);
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // setting user info in sidebar
         SettingInfoInHeaderInSidebar();
+
     }
+
 
     private void SettingInfoInHeaderInSidebar() {
         preferences =  getApplicationContext().getSharedPreferences("TokeyKey",0);
@@ -95,5 +90,10 @@ public class NavActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, configuration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void updateSideBar() {
+        SettingInfoInHeaderInSidebar();
     }
 }
