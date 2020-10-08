@@ -7,7 +7,7 @@ const { requestBody, validationResult, body, header, param, query } = require('e
 const user = require("./User");
 const User = require("./User");
 const NodeCache = require('node-cache');
-const crypto = require('crypto')
+const bcrypt = require('bcryptjs')
 
 const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://rojatkaraditi:AprApr_2606@test.z8ya6.mongodb.net/project4DB?retryWrites=true&w=majority";
@@ -73,19 +73,16 @@ route.post("/signup",[
     body("age","please enter a valid age").isInt({gt:0}),
     body("email","email cannot be empty").notEmpty().trim().escape(),
     body("email","invalid email format").isEmail(),
-    body("password","password cannot be empty").notEmpty().trim()
+    body("password","password cannot be empty").notEmpty().trim(),
+    body("password","password should have atleast 6 and at max 20 characters").isLength({min:6,max:20})
 ],(request,response)=>{
     const err = validationResult(request);
     if(!err.isEmpty()){
         return response.status(400).json({"error":err});
     }
     try{
-        let data = request.body.password;
-    let buff = new Buffer(data, 'base64');
-    let pwd = buff.toString('ascii');
-
-    if(pwd.length>=6 && pwd.length<=20){
-        var hash = crypto.createHash('md5').update(pwd).digest('hex');
+        let pwd = request.body.password;
+        var hash = bcrypt.hashSync(pwd,10);
         var newUser = new User(request.body);
         newUser.password=hash;
         collection.insertOne(newUser,(err,res)=>{
@@ -109,14 +106,7 @@ route.post("/signup",[
             }
             return response.status(responseCode).json(result);
         });
-    }
-    else{
-        var errors=[];
-        var e={"msg":"password should have atleast 6 and at max 20 characters"};
-        errors[0]=e;
-        var errArray={"errors":[e]}
-        return response.status(400).json({"error":errArray});
-    }
+    
     }
     catch(error){
         return response.status(400).json({"error":error});
@@ -140,7 +130,6 @@ route.get("/login",[
         if(authData && authData.length==2 && authData[0]==='Basic'){
             let buff = new Buffer(authData[1], 'base64');
             let loginInfo = buff.toString('ascii').split(":");
-            //console.log(loginInfo);
             var result ={};
 
             if(loginInfo!=undefined && loginInfo!=null && loginInfo.length==2){
@@ -155,8 +144,7 @@ route.get("/login",[
                     }
                     else{
                         var user = new User(res[0]);
-                        var hash = crypto.createHash('md5').update(loginInfo[1]).digest('hex');
-                        if(user.password===hash){
+                        if(bcrypt.compareSync(loginInfo[1],user.password)){
                             result=user.getUser();
                             user=user.getUser();
                             user.exp = Math.floor(Date.now() / 1000) + (60 * 60);
@@ -203,16 +191,9 @@ route.get("/users/logout",(request,response)=>{
 });
 
 
-route.get("/users/:id",[
-    param("id","id needs to be specified for fetching user").exists(),
-    param("id","id should be a mongodb id").isMongoId()
-],(request,response)=>{
+route.get("/users/profile",(request,response)=>{
     try{
-        var err = validationResult(request);
-        if(!err.isEmpty()){
-            return response.status(400).json({"error":err});
-        }
-        var query = {"_id":new mongo.ObjectID(request.params.id)};
+        var query = {"_id":new mongo.ObjectID(decoded._id)};
         var result={};
         var responseCode = 400;
         collection.find(query,{ projection: { password: 0 } }).toArray((err,res)=>{
@@ -221,7 +202,7 @@ route.get("/users/:id",[
             }
             else{
                 if(res.length<=0){
-                    result={"error":"no user found with id "+request.params.id};
+                    result={"error":"no user found with id "+decoded._id};
                 }
                 else{
                     result = res[0];
@@ -294,8 +275,7 @@ route.get("/users",[
 
 
 route.put("/users",[
-    body("_id","id needs to be specified for update").notEmpty().trim(),
-    body("_id","invalid id").isMongoId(),
+    body("_id","user id cannot be updated").isEmpty(),
     body("firstName","firstName can have only alphabets").optional().isAlpha().trim().escape(),
     body("lastName","lastName can have only alphabets").optional().isAlpha().trim().escape(),
     body("gender","gender can only be Male or Female").optional().isIn(["Male","Female"]),
@@ -322,14 +302,14 @@ route.put("/users",[
             updateData.age=request.body.age;
         }
         if(updateData.firstName || updateData.lastName || updateData.gender || updateData.age){
-            var query={"_id":mongo.ObjectID(request.body._id)};
+            var query={"_id":mongo.ObjectID(decoded._id)};
 
             collection.find(query,{ projection: { _id: 1 } }).toArray((err,res)=>{
                 if(err){
                     return response.status(400).json({"error":err});
                 }
                 if(res.length<=0){
-                    return response.status(400).json({"error":"no user found with id "+request.body._id});
+                    return response.status(400).json({"error":"no user found with id "+decoded._id});
                 }
 
                 var newQuery = {$set : updateData};
