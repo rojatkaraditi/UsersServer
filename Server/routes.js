@@ -11,7 +11,7 @@ const bcrypt = require('bcryptjs')
 
 const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://rojatkaraditi:AprApr_2606@test.z8ya6.mongodb.net/project4DB?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
+var client;
 var collection;
 const tokenSecret = "wFq9+ssDbT#e2H9^";
 var decoded={};
@@ -20,8 +20,10 @@ const myCache = new NodeCache( { stdTTL: 3600, checkperiod: 60 } );
 
 
 var connectToDb = function(req,res,next){
+    client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
     client.connect(err => {
       if(err){
+          closeConnection();
           return res.status(400).json({"error":"Could not connect to database: "+err});
       }
       collection = client.db("project4DB").collection("users");
@@ -30,9 +32,14 @@ var connectToDb = function(req,res,next){
     });
 }
 
+var closeConnection = function(){
+    client.close();
+}
+
 var verifyToken = function(req,res,next){
     var headerValue = req.header("Authorization");
     if(!headerValue){
+        closeConnection();
         return res.status(400).json({"error":"Authorization header needs to be provided for using API"});
     }
 
@@ -41,16 +48,19 @@ var verifyToken = function(req,res,next){
     if(authData && authData.length==2 && authData[0]==='Bearer'){
         token = authData[1];
         if(myCache.has(token)){
+            closeConnection();
             return res.status(400).json({"error":"Cannot proceed. User is logged out"})
         }
         try {
             decoded = jwt.verify(token, tokenSecret);
             next();
           } catch(err) {
+            closeConnection();
             return res.status(400).json({"error":err});
           }
     }
     else {
+        closeConnection();
         return res.status(400).json({"error":"Appropriate authentication information needs to be provided"})
     }
 
@@ -78,6 +88,7 @@ route.post("/signup",[
 ],(request,response)=>{
     const err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     try{
@@ -104,11 +115,13 @@ route.post("/signup",[
                 }
                 
             }
+            closeConnection();
             return response.status(responseCode).json(result);
         });
     
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error});
     }
 }); 
@@ -119,6 +132,7 @@ route.get("/login",[
 
     const err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     
@@ -156,20 +170,23 @@ route.get("/login",[
                             result={"error":"Username or password is incorrect"};
                         }
                     }
-
+                    closeConnection();
                     return response.status(responseCode).json(result);
 
                 });
             }
             else{
+                closeConnection();
                 return response.status(400).json({"error":"credentials not provided for login"});
             }
         }
         else{
+            closeConnection();
             return response.status(400).json({"error":"Desired authentication type and value required for login"})
         }
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 
@@ -181,11 +198,14 @@ route.get("/users/logout",(request,response)=>{
     if(expiryTime>0){
          var result = myCache.set(token,decoded.exp,expiryTime);
          if(!result){
+             closeConnection();
              return response.status(400).json({"error":"could not logout user"});
          }
+         closeConnection();
          return response.status(200).json({"result":"user logged out"});
     }
     else{
+        closeConnection();
         return response.status(400).json({"error":"token expired"});
     }
 });
@@ -209,10 +229,12 @@ route.get("/users/profile",(request,response)=>{
                     responseCode=200;
                 }
             }
+            closeConnection();
             return response.status(responseCode).json(result);
         });
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
@@ -224,6 +246,7 @@ route.get("/users",[
 ],(request,response)=>{
     var err =validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     try{
@@ -264,11 +287,13 @@ route.get("/users",[
                 responseCode=200;
             }
         }
+        closeConnection();
         return response.status(responseCode).json(result);
     });
 
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
@@ -285,6 +310,7 @@ route.put("/users",[
 ],(request,response)=>{
     var err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     try{
@@ -306,9 +332,11 @@ route.put("/users",[
 
             collection.find(query,{ projection: { _id: 1 } }).toArray((err,res)=>{
                 if(err){
+                    closeConnection();
                     return response.status(400).json({"error":err});
                 }
                 if(res.length<=0){
+                    closeConnection();
                     return response.status(400).json({"error":"no user found with id "+decoded._id});
                 }
 
@@ -324,17 +352,19 @@ route.put("/users",[
                             result = {"result":"user updated"};
                             responseCode=200;
                     }
-
+                    closeConnection();
                     return response.status(responseCode).json(result);
                 });
             });
             
         }
         else{
+            closeConnection();
             return response.status(200).json({"result":"nothing to update"});
         }
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });

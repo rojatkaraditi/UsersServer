@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d8531b35-89d3-4f28-bb22-c0a05abf815d",
+		"_postman_id": "25449ba4-fee4-4328-9a80-18f16edf878a",
 		"name": "UsersServer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\":\"anirban\",\n    \"lastName\":\"acharya\",\n    \"age\":30,\n    \"gender\":\"Male\",\n    \"email\":\"anirban@gmail.com\",\n    \"password\":\"anirbanacharya\"\n}",
+					"raw": "{\n    \"firstName\":\"jole\",\n    \"lastName\":\"jone\",\n    \"age\":30,\n    \"gender\":\"Male\",\n    \"email\":\"joel@gmail.com\",\n    \"password\":\"aditirojatkar\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -44,13 +44,13 @@
 					"type": "basic",
 					"basic": [
 						{
-							"key": "password",
-							"value": "aditirojatkar",
+							"key": "username",
+							"value": "joel@gmail.com",
 							"type": "string"
 						},
 						{
-							"key": "username",
-							"value": "samantha@gmail.com",
+							"key": "password",
+							"value": "aditirojatkar",
 							"type": "string"
 						}
 					]
@@ -83,7 +83,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjdlOTVmMzQxMjU5ODE3OTdmNzAzZDAiLCJmaXJzdE5hbWUiOiJqb2huIiwibGFzdE5hbWUiOiJkb2UiLCJnZW5kZXIiOiJNYWxlIiwiYWdlIjoyNSwiZW1haWwiOiJqb2huQGdtYWlsLmNvbSIsImV4cCI6MTYwMjEzNTA4NywiaWF0IjoxNjAyMTMxNDg3fQ.lllihmcwS4JqVGLu1wmkmlJgpFuXOTuypnBS_lqZq3g",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODMyOTJlMzI4ZTA0YTc4NDRlZTYiLCJmaXJzdE5hbWUiOiJqb2xlIiwibGFzdE5hbWUiOiJqb25lIiwiZ2VuZGVyIjoiTWFsZSIsImFnZSI6MzAsImVtYWlsIjoiam9lbEBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjM0OTYsImlhdCI6MTYwMjUxOTg5Nn0.qySwv0Sh7SzSuYYWCx2MRTyGDSkkgenGTjLPC97BQ_A",
 							"type": "string"
 						}
 					]
@@ -92,7 +92,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\":\"jamie\",\n    \"lastName\":\"smith\",\n    \"age\":25,\n    \"gender\":\"male\"\n}",
+					"raw": "{\n    \"firstName\":\"joel\",\n    \"lastName\":\"smith\",\n    \"age\":30,\n    \"gender\":\"Female\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -125,7 +125,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjdlOTVmMzQxMjU5ODE3OTdmNzAzZDAiLCJmaXJzdE5hbWUiOiJqb2huIiwibGFzdE5hbWUiOiJkb2UiLCJnZW5kZXIiOiJNYWxlIiwiYWdlIjoyNSwiZW1haWwiOiJqb2huQGdtYWlsLmNvbSIsImV4cCI6MTYwMjEzNTA4NywiaWF0IjoxNjAyMTMxNDg3fQ.lllihmcwS4JqVGLu1wmkmlJgpFuXOTuypnBS_lqZq3g",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODMyOTJlMzI4ZTA0YTc4NDRlZTYiLCJmaXJzdE5hbWUiOiJqb2xlIiwibGFzdE5hbWUiOiJqb25lIiwiZ2VuZGVyIjoiTWFsZSIsImFnZSI6MzAsImVtYWlsIjoiam9lbEBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjM0OTYsImlhdCI6MTYwMjUxOTg5Nn0.qySwv0Sh7SzSuYYWCx2MRTyGDSkkgenGTjLPC97BQ_A",
 							"type": "string"
 						}
 					]
@@ -159,7 +159,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjdlOTVmMzQxMjU5ODE3OTdmNzAzZDAiLCJmaXJzdE5hbWUiOiJqb2huIiwibGFzdE5hbWUiOiJkb2UiLCJnZW5kZXIiOiJNYWxlIiwiYWdlIjoyNSwiZW1haWwiOiJqb2huQGdtYWlsLmNvbSIsImV4cCI6MTYwMjEzNTA4NywiaWF0IjoxNjAyMTMxNDg3fQ.lllihmcwS4JqVGLu1wmkmlJgpFuXOTuypnBS_lqZq3g",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODMyOTJlMzI4ZTA0YTc4NDRlZTYiLCJmaXJzdE5hbWUiOiJqb2xlIiwibGFzdE5hbWUiOiJqb25lIiwiZ2VuZGVyIjoiTWFsZSIsImFnZSI6MzAsImVtYWlsIjoiam9lbEBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjM0OTYsImlhdCI6MTYwMjUxOTg5Nn0.qySwv0Sh7SzSuYYWCx2MRTyGDSkkgenGTjLPC97BQ_A",
 							"type": "string"
 						}
 					]
@@ -210,7 +210,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjdlOTVmMzQxMjU5ODE3OTdmNzAzZDAiLCJmaXJzdE5hbWUiOiJqb2huIiwibGFzdE5hbWUiOiJkb2UiLCJnZW5kZXIiOiJNYWxlIiwiYWdlIjoyNSwiZW1haWwiOiJqb2huQGdtYWlsLmNvbSIsImV4cCI6MTYwMjEzNTA4NywiaWF0IjoxNjAyMTMxNDg3fQ.lllihmcwS4JqVGLu1wmkmlJgpFuXOTuypnBS_lqZq3g",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODMyOTJlMzI4ZTA0YTc4NDRlZTYiLCJmaXJzdE5hbWUiOiJqb2xlIiwibGFzdE5hbWUiOiJqb25lIiwiZ2VuZGVyIjoiTWFsZSIsImFnZSI6MzAsImVtYWlsIjoiam9lbEBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjM0OTYsImlhdCI6MTYwMjUxOTg5Nn0.qySwv0Sh7SzSuYYWCx2MRTyGDSkkgenGTjLPC97BQ_A",
 							"type": "string"
 						}
 					]
