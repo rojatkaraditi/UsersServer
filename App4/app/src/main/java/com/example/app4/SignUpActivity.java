@@ -134,14 +134,7 @@ public class SignUpActivity extends AppCompatActivity {
                     }else{
                         genderValue = "Male";
                     }
-                    try {
-                        byte[] passwordEncoded = passwordValue.getBytes("UTF-8");
-                        String base64 = Base64.encodeToString(passwordEncoded, Base64.NO_WRAP);
-                        new createNewUser(emailValue,base64,fnameValue,lnameValue,ageValue,genderValue).execute("");
-                    } catch (UnsupportedEncodingException e) {
-                        Toast.makeText(SignUpActivity.this, "Error occured in Password. Please try again", Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
+                    new createNewUser(emailValue,passwordValue,fnameValue,lnameValue,ageValue,genderValue).execute("");
                 }
 
             }

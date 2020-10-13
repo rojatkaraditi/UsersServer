@@ -228,7 +228,6 @@ public class MyProfile_frag extends Fragment {
             final OkHttpClient client = new OkHttpClient();
             //SharedPreferences preferences = getContext().getSharedPreferences("TokeyKey", 0);
             RequestBody formBody = new FormBody.Builder()
-                    .add("_id",id)
                     .add("firstName",fnameValue)
                     .add("lastName",lnameValue)
                     .add("age",age)
@@ -291,7 +290,7 @@ public class MyProfile_frag extends Fragment {
 
             try {
                 Request request = new Request.Builder()
-                        .url("http://167.99.228.2:3000/api/v1/users/"+preferences.getString("ID", null))
+                        .url("http://167.99.228.2:3000/api/v1/users/profile")
                         .header("Authorization", "Bearer "+ preferences.getString("TOKEN_KEY", null))
                         .build();
                 try (Response response = client.newCall(request).execute()) {
