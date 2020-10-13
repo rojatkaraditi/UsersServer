@@ -7,11 +7,11 @@ const { requestBody, validationResult, body, header, param, query } = require('e
 const user = require("./User");
 const User = require("./User");
 const NodeCache = require('node-cache');
-const crypto = require('crypto')
+const bcrypt = require('bcryptjs')
 
 const MongoClient = mongo.MongoClient;
 const uri = "mongodb+srv://rojatkaraditi:AprApr_2606@test.z8ya6.mongodb.net/project4DB?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
+var client;
 var collection;
 const tokenSecret = "wFq9+ssDbT#e2H9^";
 var decoded={};
@@ -20,8 +20,10 @@ const myCache = new NodeCache( { stdTTL: 3600, checkperiod: 60 } );
 
 
 var connectToDb = function(req,res,next){
+    client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
     client.connect(err => {
       if(err){
+          closeConnection();
           return res.status(400).json({"error":"Could not connect to database: "+err});
       }
       collection = client.db("project4DB").collection("users");
@@ -30,9 +32,14 @@ var connectToDb = function(req,res,next){
     });
 }
 
+var closeConnection = function(){
+    client.close();
+}
+
 var verifyToken = function(req,res,next){
     var headerValue = req.header("Authorization");
     if(!headerValue){
+        closeConnection();
         return res.status(400).json({"error":"Authorization header needs to be provided for using API"});
     }
 
@@ -41,16 +48,19 @@ var verifyToken = function(req,res,next){
     if(authData && authData.length==2 && authData[0]==='Bearer'){
         token = authData[1];
         if(myCache.has(token)){
+            closeConnection();
             return res.status(400).json({"error":"Cannot proceed. User is logged out"})
         }
         try {
             decoded = jwt.verify(token, tokenSecret);
             next();
           } catch(err) {
+            closeConnection();
             return res.status(400).json({"error":err});
           }
     }
     else {
+        closeConnection();
         return res.status(400).json({"error":"Appropriate authentication information needs to be provided"})
     }
 
@@ -73,19 +83,17 @@ route.post("/signup",[
     body("age","please enter a valid age").isInt({gt:0}),
     body("email","email cannot be empty").notEmpty().trim().escape(),
     body("email","invalid email format").isEmail(),
-    body("password","password cannot be empty").notEmpty().trim()
+    body("password","password cannot be empty").notEmpty().trim(),
+    body("password","password should have atleast 6 and at max 20 characters").isLength({min:6,max:20})
 ],(request,response)=>{
     const err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     try{
-        let data = request.body.password;
-    let buff = new Buffer(data, 'base64');
-    let pwd = buff.toString('ascii');
-
-    if(pwd.length>=6 && pwd.length<=20){
-        var hash = crypto.createHash('md5').update(pwd).digest('hex');
+        let pwd = request.body.password;
+        var hash = bcrypt.hashSync(pwd,10);
         var newUser = new User(request.body);
         newUser.password=hash;
         collection.insertOne(newUser,(err,res)=>{
@@ -107,18 +115,13 @@ route.post("/signup",[
                 }
                 
             }
+            closeConnection();
             return response.status(responseCode).json(result);
         });
-    }
-    else{
-        var errors=[];
-        var e={"msg":"password should have atleast 6 and at max 20 characters"};
-        errors[0]=e;
-        var errArray={"errors":[e]}
-        return response.status(400).json({"error":errArray});
-    }
+    
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error});
     }
 }); 
@@ -129,6 +132,7 @@ route.get("/login",[
 
     const err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     
@@ -140,7 +144,6 @@ route.get("/login",[
         if(authData && authData.length==2 && authData[0]==='Basic'){
             let buff = new Buffer(authData[1], 'base64');
             let loginInfo = buff.toString('ascii').split(":");
-            //console.log(loginInfo);
             var result ={};
 
             if(loginInfo!=undefined && loginInfo!=null && loginInfo.length==2){
@@ -155,8 +158,7 @@ route.get("/login",[
                     }
                     else{
                         var user = new User(res[0]);
-                        var hash = crypto.createHash('md5').update(loginInfo[1]).digest('hex');
-                        if(user.password===hash){
+                        if(bcrypt.compareSync(loginInfo[1],user.password)){
                             result=user.getUser();
                             user=user.getUser();
                             user.exp = Math.floor(Date.now() / 1000) + (60 * 60);
@@ -168,20 +170,23 @@ route.get("/login",[
                             result={"error":"Username or password is incorrect"};
                         }
                     }
-
+                    closeConnection();
                     return response.status(responseCode).json(result);
 
                 });
             }
             else{
+                closeConnection();
                 return response.status(400).json({"error":"credentials not provided for login"});
             }
         }
         else{
+            closeConnection();
             return response.status(400).json({"error":"Desired authentication type and value required for login"})
         }
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 
@@ -193,26 +198,22 @@ route.get("/users/logout",(request,response)=>{
     if(expiryTime>0){
          var result = myCache.set(token,decoded.exp,expiryTime);
          if(!result){
+             closeConnection();
              return response.status(400).json({"error":"could not logout user"});
          }
+         closeConnection();
          return response.status(200).json({"result":"user logged out"});
     }
     else{
+        closeConnection();
         return response.status(400).json({"error":"token expired"});
     }
 });
 
 
-route.get("/users/:id",[
-    param("id","id needs to be specified for fetching user").exists(),
-    param("id","id should be a mongodb id").isMongoId()
-],(request,response)=>{
+route.get("/users/profile",(request,response)=>{
     try{
-        var err = validationResult(request);
-        if(!err.isEmpty()){
-            return response.status(400).json({"error":err});
-        }
-        var query = {"_id":new mongo.ObjectID(request.params.id)};
+        var query = {"_id":new mongo.ObjectID(decoded._id)};
         var result={};
         var responseCode = 400;
         collection.find(query,{ projection: { password: 0 } }).toArray((err,res)=>{
@@ -221,17 +222,19 @@ route.get("/users/:id",[
             }
             else{
                 if(res.length<=0){
-                    result={"error":"no user found with id "+request.params.id};
+                    result={"error":"no user found with id "+decoded._id};
                 }
                 else{
                     result = res[0];
                     responseCode=200;
                 }
             }
+            closeConnection();
             return response.status(responseCode).json(result);
         });
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
@@ -243,6 +246,7 @@ route.get("/users",[
 ],(request,response)=>{
     var err =validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     try{
@@ -283,19 +287,20 @@ route.get("/users",[
                 responseCode=200;
             }
         }
+        closeConnection();
         return response.status(responseCode).json(result);
     });
 
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
 
 
 route.put("/users",[
-    body("_id","id needs to be specified for update").notEmpty().trim(),
-    body("_id","invalid id").isMongoId(),
+    body("_id","user id cannot be updated").isEmpty(),
     body("firstName","firstName can have only alphabets").optional().isAlpha().trim().escape(),
     body("lastName","lastName can have only alphabets").optional().isAlpha().trim().escape(),
     body("gender","gender can only be Male or Female").optional().isIn(["Male","Female"]),
@@ -305,6 +310,7 @@ route.put("/users",[
 ],(request,response)=>{
     var err = validationResult(request);
     if(!err.isEmpty()){
+        closeConnection();
         return response.status(400).json({"error":err});
     }
     try{
@@ -322,14 +328,16 @@ route.put("/users",[
             updateData.age=request.body.age;
         }
         if(updateData.firstName || updateData.lastName || updateData.gender || updateData.age){
-            var query={"_id":mongo.ObjectID(request.body._id)};
+            var query={"_id":mongo.ObjectID(decoded._id)};
 
             collection.find(query,{ projection: { _id: 1 } }).toArray((err,res)=>{
                 if(err){
+                    closeConnection();
                     return response.status(400).json({"error":err});
                 }
                 if(res.length<=0){
-                    return response.status(400).json({"error":"no user found with id "+request.body._id});
+                    closeConnection();
+                    return response.status(400).json({"error":"no user found with id "+decoded._id});
                 }
 
                 var newQuery = {$set : updateData};
@@ -344,17 +352,19 @@ route.put("/users",[
                             result = {"result":"user updated"};
                             responseCode=200;
                     }
-
+                    closeConnection();
                     return response.status(responseCode).json(result);
                 });
             });
             
         }
         else{
+            closeConnection();
             return response.status(200).json({"result":"nothing to update"});
         }
     }
     catch(error){
+        closeConnection();
         return response.status(400).json({"error":error.toString()});
     }
 });
