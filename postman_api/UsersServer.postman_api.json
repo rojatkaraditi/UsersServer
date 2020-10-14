@@ -12,7 +12,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\":\"jole\",\n    \"lastName\":\"jone\",\n    \"age\":30,\n    \"gender\":\"Male\",\n    \"email\":\"joel@gmail.com\",\n    \"password\":\"aditirojatkar\"\n}",
+					"raw": "{\n    \"firstName\":\"jamie\",\n    \"lastName\":\"lanister\",\n    \"age\":40,\n    \"gender\":\"Male\",\n    \"email\":\"lanister@gmail.com\",\n    \"password\":\"123456\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -44,13 +44,13 @@
 					"type": "basic",
 					"basic": [
 						{
-							"key": "username",
-							"value": "joel@gmail.com",
+							"key": "password",
+							"value": "123456",
 							"type": "string"
 						},
 						{
-							"key": "password",
-							"value": "aditirojatkar",
+							"key": "username",
+							"value": "lanister@gmail.com",
 							"type": "string"
 						}
 					]
@@ -83,7 +83,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODMyOTJlMzI4ZTA0YTc4NDRlZTYiLCJmaXJzdE5hbWUiOiJqb2xlIiwibGFzdE5hbWUiOiJqb25lIiwiZ2VuZGVyIjoiTWFsZSIsImFnZSI6MzAsImVtYWlsIjoiam9lbEBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjM0OTYsImlhdCI6MTYwMjUxOTg5Nn0.qySwv0Sh7SzSuYYWCx2MRTyGDSkkgenGTjLPC97BQ_A",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg2OWZmYzc1NjkwMTAzYmI2Njc0MzgiLCJmaXJzdE5hbWUiOiJqYW1pZSIsImxhc3ROYW1lIjoibGFuaXN0ZXIiLCJnZW5kZXIiOiJNYWxlIiwiYWdlIjo0MCwiZW1haWwiOiJsYW5pc3RlckBnbWFpbC5jb20iLCJleHAiOjE2MDI2NjIwNTAsImlhdCI6MTYwMjY1ODQ1MH0.d-ZsEFIxTQzJq_gpwG1WQMTGmtHyZK_5_TS5aWHiVEA",
 							"type": "string"
 						}
 					]
@@ -92,7 +92,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\":\"joel\",\n    \"lastName\":\"smith\",\n    \"age\":30,\n    \"gender\":\"Female\"\n}",
+					"raw": "{\n    \"firstName\":\"sammie\",\n    \"lastName\":\"jone\",\n    \"age\":45,\n    \"gender\":\"Female\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -125,7 +125,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODMyOTJlMzI4ZTA0YTc4NDRlZTYiLCJmaXJzdE5hbWUiOiJqb2xlIiwibGFzdE5hbWUiOiJqb25lIiwiZ2VuZGVyIjoiTWFsZSIsImFnZSI6MzAsImVtYWlsIjoiam9lbEBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjM0OTYsImlhdCI6MTYwMjUxOTg5Nn0.qySwv0Sh7SzSuYYWCx2MRTyGDSkkgenGTjLPC97BQ_A",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg2OWZmYzc1NjkwMTAzYmI2Njc0MzgiLCJmaXJzdE5hbWUiOiJqYW1pZSIsImxhc3ROYW1lIjoibGFuaXN0ZXIiLCJnZW5kZXIiOiJNYWxlIiwiYWdlIjo0MCwiZW1haWwiOiJsYW5pc3RlckBnbWFpbC5jb20iLCJleHAiOjE2MDI2NjIwNTAsImlhdCI6MTYwMjY1ODQ1MH0.d-ZsEFIxTQzJq_gpwG1WQMTGmtHyZK_5_TS5aWHiVEA",
 							"type": "string"
 						}
 					]
@@ -159,7 +159,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODMyOTJlMzI4ZTA0YTc4NDRlZTYiLCJmaXJzdE5hbWUiOiJqb2xlIiwibGFzdE5hbWUiOiJqb25lIiwiZ2VuZGVyIjoiTWFsZSIsImFnZSI6MzAsImVtYWlsIjoiam9lbEBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjM0OTYsImlhdCI6MTYwMjUxOTg5Nn0.qySwv0Sh7SzSuYYWCx2MRTyGDSkkgenGTjLPC97BQ_A",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg2OWZmYzc1NjkwMTAzYmI2Njc0MzgiLCJmaXJzdE5hbWUiOiJqYW1pZSIsImxhc3ROYW1lIjoibGFuaXN0ZXIiLCJnZW5kZXIiOiJNYWxlIiwiYWdlIjo0MCwiZW1haWwiOiJsYW5pc3RlckBnbWFpbC5jb20iLCJleHAiOjE2MDI2NjIwNTAsImlhdCI6MTYwMjY1ODQ1MH0.d-ZsEFIxTQzJq_gpwG1WQMTGmtHyZK_5_TS5aWHiVEA",
 							"type": "string"
 						}
 					]
@@ -167,7 +167,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "167.99.228.2:3000/api/v1/users?lastName=jo&email=gmail&firstName=vi&gender=Female",
+					"raw": "167.99.228.2:3000/api/v1/users?lastName=jo&email=uncc&firstName=sam&gender=Female",
 					"host": [
 						"167",
 						"99",
@@ -187,11 +187,11 @@
 						},
 						{
 							"key": "email",
-							"value": "gmail"
+							"value": "uncc"
 						},
 						{
 							"key": "firstName",
-							"value": "vi"
+							"value": "sam"
 						},
 						{
 							"key": "gender",
@@ -210,7 +210,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg0ODMyOTJlMzI4ZTA0YTc4NDRlZTYiLCJmaXJzdE5hbWUiOiJqb2xlIiwibGFzdE5hbWUiOiJqb25lIiwiZ2VuZGVyIjoiTWFsZSIsImFnZSI6MzAsImVtYWlsIjoiam9lbEBnbWFpbC5jb20iLCJleHAiOjE2MDI1MjM0OTYsImlhdCI6MTYwMjUxOTg5Nn0.qySwv0Sh7SzSuYYWCx2MRTyGDSkkgenGTjLPC97BQ_A",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1Zjg2OWZmYzc1NjkwMTAzYmI2Njc0MzgiLCJmaXJzdE5hbWUiOiJqYW1pZSIsImxhc3ROYW1lIjoibGFuaXN0ZXIiLCJnZW5kZXIiOiJNYWxlIiwiYWdlIjo0MCwiZW1haWwiOiJsYW5pc3RlckBnbWFpbC5jb20iLCJleHAiOjE2MDI2NjIwNTAsImlhdCI6MTYwMjY1ODQ1MH0.d-ZsEFIxTQzJq_gpwG1WQMTGmtHyZK_5_TS5aWHiVEA",
 							"type": "string"
 						}
 					]
